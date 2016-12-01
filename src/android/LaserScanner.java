@@ -4,8 +4,11 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,16 +21,31 @@ public class LaserScanner extends CordovaPlugin {
      * broadcaster receive
      */
     private String SCANNER_RETURN_DATA = "com.se4500.onDecodeComplete";
-    //调用扫描广播
+    /**
+     * broadcaster start scan
+     */
     private String SCANNER_START_SCAN = "com.geomobile.se4500barcode";
-
+    /**
+     * broadcaster stop scan
+     */
     private String SCANNER_STOP_SCAN = "com.geomobile.se4500barcode.poweroff";
 
-    private static final String LOG_TAG = "LaserScanner";
+    private static final String LOG_TAG = "LaserReceiver";
 
-    private CallbackContext callbackContext;
+    private CallbackContext callbackContext = null;
 
-    private BroadcastReceiver receiver;
+    private BroadcastReceiver receiver = null;
+
+    private String lastBarcode = null;
+
+
+    /**
+     * get activity
+     * @return Activity
+     */
+    private Activity getActivity(){
+        return this.cordova.getActivity();
+    }
 
     /**
      * cordova initialize
@@ -44,18 +62,15 @@ public class LaserScanner extends CordovaPlugin {
          * call scanner
          */
         iFilter.addAction(SCANNER_RETURN_DATA);
-        this.cordova.getActivity().registerReceiver(receiver, iFilter);
+        getActivity().registerReceiver(receiver, iFilter);
 
-        if (this.receiver == null) {
-            this.receiver = new BroadcastReceiver() {
+        if (receiver == null) {
+            receiver = new BroadcastReceiver() {
                 public void onReceive(Context context, Intent intent) {
                     String action = intent.getAction();
                     if (action.equals(SCANNER_RETURN_DATA)) {
                         String data = intent.getStringExtra("se4500");
-                        /**
-                         * return data to cordova callback
-                         */
-                        callbackContext.success(data);
+                        resultHandler(data);
                     }
                 }
             };
@@ -64,9 +79,7 @@ public class LaserScanner extends CordovaPlugin {
         /**
          * register receiver
          */
-        this.cordova.getActivity().registerReceiver(this.receiver, iFilter);
-
-        this.callbackContext = null;
+        getActivity().registerReceiver(receiver, iFilter);
 
     }
 
@@ -79,9 +92,16 @@ public class LaserScanner extends CordovaPlugin {
      * @return
      */
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
+
+        this.cordovaCallAction = action;
+        this.callbackContext = callbackContext;
+
         if (action.equals("scan")) {
-            this.callbackContext = callbackContext;
-            this.startScan();
+            startScan();
+            return true;
+        }
+        if (action.equals("receive")){
+            sendUpdate(lastBarcode,true);
             return true;
         }
         return false;
@@ -90,20 +110,25 @@ public class LaserScanner extends CordovaPlugin {
     /**
      * stop scan and unregister receiver when destroy
      */
+    @Override
     public void onDestroy() {
-        Intent intent = new Intent();
-        intent.setAction(SCANNER_STOP_SCAN);
-        webView.getContext().sendBroadcast(intent);
-        if (this.receiver != null) {
-            try {
-                webView.getContext().unregisterReceiver(this.receiver);
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Error unregistering barcode receiver: " + e.getMessage(), e);
-            } finally {
-                receiver = null;
-            }
-        }
+
+        stopScan();
+
+        removeLaserScannerListener();
+
         super.onDestroy();
+    }
+
+
+    @Override
+    public void onReset() {
+
+        stopScan();
+
+        removeLaserScannerListener();
+
+        super.onReset();
     }
 
     /**
@@ -112,7 +137,47 @@ public class LaserScanner extends CordovaPlugin {
     private void startScan() {
         Intent intent = new Intent();
         intent.setAction(SCANNER_START_SCAN);
-        this.cordova.getActivity().sendBroadcast(intent, null);
+        getActivity().sendBroadcast(intent, null);
+    }
+
+    private  void stopScan(){
+        Intent intent = new Intent();
+        intent.setAction(SCANNER_STOP_SCAN);
+        getActivity().sendBroadcast(intent);
+    }
+
+
+    /**
+     * Stop the receiver and set it to null.
+     */
+    private void removeLaserScannerListener() {
+        if (this.receiver != null) {
+            try {
+                getActivity().unregisterReceiver(this.receiver);
+                this.receiver = null;
+            } catch (Exception e) {
+                Log.e(LOG_TAG, "Error unregistering LaserReceiver receiver: " + e.getMessage(), e);
+            }
+        }
+    }
+
+
+    private void resultHandler(String data){
+
+            sendUpdate(data,true);
+            lastBarcode = data;
+
+    }
+
+
+    private void sendUpdate(String data, boolean keepCallback) {
+
+        if (callbackContext != null) {
+            PluginResult result = new PluginResult(PluginResult.Status.OK, data);
+            result.setKeepCallback(keepCallback);
+            callbackContext.sendPluginResult(result);
+        }
+
     }
 
 }

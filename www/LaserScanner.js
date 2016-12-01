@@ -1,9 +1,41 @@
-var exec = require('cordova/exec');
+var cordova = require('cordova'),
+    exec = require('cordova/exec'),
+    channel = require('cordova/channel');
 
-var LaserScanner = {
-  scan : function (success, error) {
-        exec(success, error, "LaserScanner", "scan", []);
-  }
-}
+var LaserScanner = function (){
+    this.result = null;
+};
 
-module.exports = LaserScanner;
+LaserScanner.prototype.receive = function () {
+    exec(scanner.onResult,scanner.onError,"LaserScanner","receive",[]);
+};
+
+LaserScanner.prototype.scan = function (){
+    exec(null, scanner.onError, "LaserScanner", "scan", []);
+};
+
+LaserScanner.prototype.onResult = function(result){
+    if(result == null) return;
+    scanner.result = result;
+    cordova.fireDocumentEvent("barcodeReceived");
+    cordova.fireWindowEvent("barcodeReceived");
+};
+
+LaserScanner.prototype.onError = function(error){
+    console.log("Laser Scanner error!" + error);
+};
+
+
+var scanner = new LaserScanner();
+
+/**
+ * ???
+ */
+channel.createSticky('onCordovaConnectionReady');
+//channel.waitForInitialization('onCordovaConnectionReady');
+
+channel.onCordovaReady.subscribe(function () {
+    exec(scanner.onResult,scanner.onError,"LaserScanner","receive",[]);
+});
+
+module.exports = scanner;
