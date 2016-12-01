@@ -3,6 +3,7 @@ Cordova Laser Scanner for Speedata Industrial PDA devices
 
 # Usage
 
+```javascript
 LaserScanner.scan(function(success){
     if(success != null){
        console.log("Scan result is + " + success)
@@ -10,3 +11,4 @@ LaserScanner.scan(function(success){
 },function(error){
     console.log(error)
 });
+```
