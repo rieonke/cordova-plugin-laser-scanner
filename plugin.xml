@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="cordova-plugin-laser-scanner"
+    version="0.0.1">
+    <name>Laser Scanner</name>
+    <description>Cordova Laser Scanner Plugin</description>
+    <license>MIT</license>
+    <keywords>cordova,laser,scanner,barcode</keywords>
+
+    <js-module src="www/LaserScanner.js" name="LaserScanner">
+        <clobbers target="LaserScanner" />
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="LaserScanner">
+                <param name="android-package" value="cn.rieon.cordova.LaserScanner"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/LaserScanner.java" target-dir="src/cn/rieon/cordova" />
+
+     </platform>
+
+</plugin>

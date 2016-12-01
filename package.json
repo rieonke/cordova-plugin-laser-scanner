@@ -1,0 +1,39 @@
+{
+  "name": "cordova-plugin-laser-scanner",
+  "version": "0.0.1",
+  "description": "Cordova Laser Barcode Scanner Plugin",
+  "cordova": {
+    "id": "cordova-plugin-laser-scanner",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rieonke/cordova-plugin-laser-scanner.git"
+  },
+  "keywords": [
+    "cordova",
+    "laser",
+    "scanner",
+    "barcode",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "Rieon Ke",
+  "license": "MIT",
+  "engines": {
+    "cordovaDependencies": {
+      "3.0.0": {
+        "cordova": ">100"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/rieonke/cordova-plugin-laser-scanner/issues"
+  },
+  "homepage": "https://github.com/rieonke/cordova-plugin-laser-scanner#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
