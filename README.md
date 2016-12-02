@@ -13,7 +13,7 @@ cordova plugin add cordova-plugin-laser-scanner
 
 # Usages 用途
 
-1. Call scan 调用扫描头扫描
+### 1.Call scan 调用扫描头扫描
 
 ```javascript
 LaserScanner.scan(); 
@@ -22,7 +22,7 @@ LaserScanner.scan();
 
 ```
 
-2. Receive scan result from device 从设备获取扫描结果
+### 2.Receive scan result from device 从设备获取扫描结果
 
 ```javascript
 
@@ -48,12 +48,12 @@ window.addEventListener("barcodeReceived",function(){  //also document.addEventL
 
 cd demo
 
-// will automatically install the plugins (based on config.xml)
-// 将会根据config.xml自动安装
+# will automatically install the plugins (based on config.xml)
+# 将会根据config.xml自动安装
 cordova platform add android
 
-// build android application
-// 编译打包apk文件
+# build android application
+# 编译打包apk文件
 cordova build android
 
 ```
