@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-laser-scanner",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Cordova Laser Barcode Scanner Plugin",
   "cordova": {
     "id": "cordova-plugin-laser-scanner",

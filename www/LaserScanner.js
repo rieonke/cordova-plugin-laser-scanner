@@ -11,7 +11,7 @@ LaserScanner.prototype.receive = function () {
 };
 
 LaserScanner.prototype.scan = function (){
-    exec(null, scanner.onError, "LaserScanner", "scan", []);
+    exec(scanner.onResult, scanner.onError, "LaserScanner", "scan", []);
 };
 
 LaserScanner.prototype.onResult = function(result){

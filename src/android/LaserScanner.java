@@ -93,7 +93,6 @@ public class LaserScanner extends CordovaPlugin {
      */
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
 
-        this.cordovaCallAction = action;
         this.callbackContext = callbackContext;
 
         if (action.equals("scan")) {
