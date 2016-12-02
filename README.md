@@ -3,6 +3,14 @@ Cordova Laser Scanner for Speedata Industrial PDA devices
 
 思必拓(Speedata)手持终端激光扫描器的Cordova接口
 
+# Install 安装
+
+```javascript
+
+cordova plugin add cordova-plugin-laser-scanner
+
+```
+
 # Usages 用途
 
 1. Call scan 调用扫描头扫描
@@ -30,6 +38,23 @@ window.addEventListener("barcodeReceived",function(){  //also document.addEventL
     var result = LaserScanner.result;
     console.log("the result of this barcode is + " result);
 },false)
+
+```
+
+
+# Demo Guide 示例使用
+
+```shell
+
+cd demo
+
+// will automatically install the plugins (based on config.xml)
+// 将会根据config.xml自动安装
+cordova platform add android
+
+// build android application
+// 编译打包apk文件
+cordova build android
 
 ```
 
