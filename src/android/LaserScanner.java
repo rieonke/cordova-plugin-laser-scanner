@@ -13,6 +13,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 
 public class LaserScanner extends CordovaPlugin {
@@ -62,7 +63,7 @@ public class LaserScanner extends CordovaPlugin {
          * call scanner
          */
         iFilter.addAction(SCANNER_RETURN_DATA);
-        getActivity().registerReceiver(receiver, iFilter);
+        getActivity().registerReceiver(receiver, iFilter, ContextCompat.RECEIVER_EXPORTED);
 
         if (receiver == null) {
             receiver = new BroadcastReceiver() {
@@ -79,7 +80,8 @@ public class LaserScanner extends CordovaPlugin {
         /**
          * register receiver
          */
-        getActivity().registerReceiver(receiver, iFilter);
+
+        getActivity().registerReceiver(receiver, iFilter, ContextCompat.RECEIVER_EXPORTED);
 
     }
 
